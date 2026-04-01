@@ -5,8 +5,11 @@
 #
 # Packages installed:
 #   - Google Chrome (stable) — via the official Google apt repository
+#
+# Also places IllumaComfyUI.html user guide on the desktop of REMOTE_ACCESS_USER.
 
 SENTINEL_DIR="${SENTINEL_DIR:-/var/lib/illuma}"
+REMOTE_ACCESS_USER="${REMOTE_ACCESS_USER:-comfyui}"
 
 # ---------------------------------------------------------------------------
 # Main entry point
@@ -23,6 +26,8 @@ function addPackages() {
     _installChrome
 
     _validateChrome
+
+    _placeGuideOnDesktop
 
     touch "$sentinel"
     print_message "green" "Add my packages complete"
@@ -79,6 +84,33 @@ function _validateChrome() {
     print_message "green" "Chrome validation passed: $version"
 }
 
+# ---------------------------------------------------------------------------
+# Desktop guide
+# ---------------------------------------------------------------------------
+
+function _placeGuideOnDesktop() {
+    print_message "blue" "Placing IllumaComfyUI.html guide on desktop..."
+
+    local desktop_dir="/home/${REMOTE_ACCESS_USER}/Desktop"
+    local guide_src="${SCRIPT_DIR}/IllumaComfyUI.html"
+    local guide_dst="${desktop_dir}/IllumaComfyUI.html"
+
+    # Create Desktop directory if it doesn't exist yet
+    mkdir -p "$desktop_dir"
+
+    if [[ ! -f "$guide_src" ]]; then
+        print_message "yellow" "IllumaComfyUI.html not found at $guide_src — skipping desktop placement"
+        return 0
+    fi
+
+    cp "$guide_src" "$guide_dst"
+    chown "${REMOTE_ACCESS_USER}:${REMOTE_ACCESS_USER}" "$guide_dst"
+    chmod 644 "$guide_dst"
+
+    print_message "green" "Guide placed at: $guide_dst"
+}
+
 export -f addPackages
 export -f _installChrome
 export -f _validateChrome
+export -f _placeGuideOnDesktop

@@ -9,6 +9,11 @@ COMFYUI_PORT="${COMFYUI_PORT:-8188}"
 SERVICE_NAME="comfyui"
 SENTINEL_DIR="${SENTINEL_DIR:-/var/lib/illuma}"
 
+# Fixed UI credentials — static across restarts
+WEB_USER="${WEB_USER:-illuma}"
+WEB_PASSWORD="${WEB_PASSWORD:-illuma}"
+WEB_TOKEN="${WEB_TOKEN:-illumaCloud}"
+
 function setupComfyUI() {
     print_message "blue" "Setting up ComfyUI container and systemd service..."
 
@@ -74,6 +79,10 @@ ExecStart=/usr/bin/docker run \\
     -v ${DATA_DIR}/outputs:/opt/ComfyUI/output \\
     -v ${DATA_DIR}/custom_nodes:/opt/ComfyUI/custom_nodes \\
     --shm-size=2g \\
+    -e WEB_USER=${WEB_USER} \\
+    -e WEB_PASSWORD=${WEB_PASSWORD} \\
+    -e WEB_TOKEN=${WEB_TOKEN} \\
+    -e WEB_ENABLE_AUTH=true \\
     ${COMFYUI_IMAGE}
 
 ExecStop=/usr/bin/docker stop ${SERVICE_NAME}

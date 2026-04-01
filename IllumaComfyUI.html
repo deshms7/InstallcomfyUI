@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IllumaComfyUI — User Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #151821;
+      --surface-2: #1c2030;
+      --border:    #252a3a;
+      --accent:    #5b8af5;
+      --accent-2:  #7c6ff7;
+      --green:     #3ecf8e;
+      --amber:     #f5a623;
+      --text:      #e4e8f0;
+      --muted:     #8892a4;
+      --code-bg:   #0a0c10;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      height: 32px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .brand-name span {
+      color: var(--accent);
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(91, 138, 245, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(91, 138, 245, 0.25);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d0f14 0%, #131629 50%, #0d0f14 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 48px 56px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #e4e8f0 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .access-cards {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .access-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      min-width: 280px;
+      text-align: left;
+    }
+
+    .access-card .label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .access-card .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .access-card .cred-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      gap: 16px;
+    }
+
+    .access-card .cred-item .k {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .access-card .cred-item .v {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 32px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(91, 138, 245, 0.12);
+      border: 1px solid rgba(91, 138, 245, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 24px;
+    }
+
+    p { color: var(--muted); margin-bottom: 12px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(91, 138, 245, 0.12);
+      border: 1px solid rgba(91, 138, 245, 0.3);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-num::before { content: counter(step); }
+
+    .step-body { padding-top: 4px; }
+    .step-body strong { color: var(--text); font-weight: 500; }
+
+    /* ── Code block ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+      color: #a5d6ff;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      color: #cdd9e5;
+      line-height: 1.6;
+    }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: top;
+    }
+
+    td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Callout ── */
+    .callout {
+      display: flex;
+      gap: 12px;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .callout.info {
+      background: rgba(91, 138, 245, 0.06);
+      border: 1px solid rgba(91, 138, 245, 0.2);
+      color: #90b4fb;
+    }
+
+    .callout.tip {
+      background: rgba(62, 207, 142, 0.06);
+      border: 1px solid rgba(62, 207, 142, 0.2);
+      color: #6edcaa;
+    }
+
+    .callout.warn {
+      background: rgba(245, 166, 35, 0.06);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      color: #f5c96c;
+    }
+
+    /* ── Path pill ── */
+    .path {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(124, 111, 247, 0.1);
+      border: 1px solid rgba(124, 111, 247, 0.2);
+      color: #a99ffa;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer .left { color: var(--muted); font-size: 13px; }
+    footer .left a { color: var(--accent); text-decoration: none; }
+    footer .left a:hover { text-decoration: underline; }
+
+    footer .right { font-size: 12px; color: #555e72; }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <a class="brand" href="https://illuma.cloud" target="_blank">
+    <img src="https://illuma.cloud/icon-primary.svg" alt="Illuma" onerror="this.style.display='none'" />
+    <span class="brand-name">Illuma<span>ComfyUI</span></span>
+  </a>
+  <span class="badge">User Guide</span>
+</header>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <h1>Welcome to IllumaComfyUI</h1>
+  <p>GPU-accelerated AI image generation, powered by the Illuma cloud platform. This guide covers everything you need to get started.</p>
+
+  <div class="access-cards">
+    <div class="access-card">
+      <div class="label">Quick Access — Token URL</div>
+      <div class="value">http://localhost:8188/?token=illumaCloud</div>
+      <div style="margin-top:8px; font-size:12px; color:#555e72;">No login required — bookmark this URL</div>
+    </div>
+    <div class="access-card">
+      <div class="label">Login Credentials</div>
+      <div class="cred-row">
+        <div class="cred-item">
+          <div class="k">Username</div>
+          <div class="v">illuma</div>
+        </div>
+        <div class="cred-item">
+          <div class="k">Password</div>
+          <div class="v">illuma</div>
+        </div>
+        <div class="cred-item">
+          <div class="k">Port</div>
+          <div class="v">8188</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main content ── -->
+<div class="container">
+
+  <!-- 1. Opening ComfyUI -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚀</div>
+      <h2>Opening ComfyUI</h2>
+    </div>
+
+    <div class="card steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Open Google Chrome</strong> from the desktop or taskbar.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Navigate to the token URL</strong> — paste this into the address bar and press Enter:<br />
+          <pre><code>http://localhost:8188/?token=illumaCloud</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>If prompted to log in</strong>, use <code>illuma</code> / <code>illuma</code>.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>The ComfyUI canvas loads.</strong> You'll see a default workflow with nodes connected together — this is your starting point.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      💡 Bookmark <strong>http://localhost:8188/?token=illumaCloud</strong> in Chrome so you never need to type it again.
+    </div>
+  </div>
+
+  <!-- 2. Using ComfyUI -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🎨</div>
+      <h2>Using ComfyUI</h2>
+    </div>
+
+    <p>ComfyUI is a node-based interface for AI image generation. Each node performs one step of the pipeline — load a model, encode a prompt, sample, decode, save.</p>
+
+    <h3>Basic txt2img workflow</h3>
+    <div class="card steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Load Checkpoint</strong> — in the <em>Load Checkpoint</em> node, click the model dropdown and select a <code>.safetensors</code> file.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Enter your prompt</strong> — click the positive <em>CLIP Text Encode</em> node and type your prompt. Enter a negative prompt in the negative node.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Set image size</strong> — in the <em>Empty Latent Image</em> node, set width and height (e.g. 512×512 for SD1.5, 1024×1024 for SDXL).
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Click Queue Prompt</strong> — the blue button at the top right. The GPU begins generating. Progress shows in the top bar.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>View output</strong> — the generated image appears in the <em>Save Image</em> node and is saved to the outputs folder automatically.
+        </div>
+      </div>
+    </div>
+
+    <h3>Canvas navigation</h3>
+    <table>
+      <thead><tr><th>Action</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td>Pan</td><td>Middle-click drag or Space + left-click drag</td></tr>
+        <tr><td>Zoom</td><td>Scroll wheel</td></tr>
+        <tr><td>Add node</td><td>Right-click canvas → Add Node</td></tr>
+        <tr><td>Delete node</td><td>Select node → Delete key</td></tr>
+        <tr><td>Connect nodes</td><td>Drag from an output dot to an input dot</td></tr>
+        <tr><td>Save workflow</td><td>Menu → Save (exports as JSON)</td></tr>
+        <tr><td>Load workflow</td><td>Menu → Load (import a JSON file)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. File Locations -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📁</div>
+      <h2>File Locations</h2>
+    </div>
+
+    <p>All data is stored outside the container and persists across restarts and image updates.</p>
+
+    <table>
+      <thead><tr><th>Path on this machine</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>/data/comfyui/models/</td>
+          <td>All model files — checkpoints, LoRAs, VAEs, ControlNets, embeddings</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/models/checkpoints/</td>
+          <td>Main model files (<code>.safetensors</code>, <code>.ckpt</code>)</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/models/loras/</td>
+          <td>LoRA / LyCORIS fine-tune weights</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/models/vae/</td>
+          <td>VAE decoder files</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/models/controlnet/</td>
+          <td>ControlNet model files</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/outputs/</td>
+          <td>All generated images land here, organised by date</td>
+        </tr>
+        <tr>
+          <td>/data/comfyui/custom_nodes/</td>
+          <td>Custom node extensions (e.g. ComfyUI-Manager)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      ℹ️ These paths are mounted into the container at <code>/opt/ComfyUI/models</code> and <code>/opt/ComfyUI/output</code>. Files you place here are immediately visible to ComfyUI on the next generation or after a ComfyUI restart.
+    </div>
+  </div>
+
+  <!-- 4. Downloading Models -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⬇️</div>
+      <h2>Downloading &amp; Adding New Models</h2>
+    </div>
+
+    <h3>Method 1 — Download directly on the machine (recommended)</h3>
+    <div class="card steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Open a terminal</strong> on the desktop (right-click desktop → Open Terminal).
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Navigate to the checkpoints folder:</strong>
+          <pre><code>cd /data/comfyui/models/checkpoints</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Download the model with wget</strong> — replace the URL with the one from HuggingFace or CivitAI:
+          <pre><code>sudo wget -O model-name.safetensors \
+  https://huggingface.co/&lt;author&gt;/&lt;repo&gt;/resolve/main/model.safetensors</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Refresh ComfyUI</strong> — click the <em>Refresh</em> button in the Load Checkpoint node dropdown, or restart ComfyUI:
+          <pre><code>sudo docker exec comfyui supervisorctl restart comfyui</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Select the model</strong> in the Load Checkpoint node dropdown — your new model will appear in the list.
+        </div>
+      </div>
+    </div>
+
+    <h3>Method 2 — Download via Chrome browser on this machine</h3>
+    <p>Visit <a href="https://civitai.com" target="_blank" style="color:var(--accent)">civitai.com</a> or <a href="https://huggingface.co" target="_blank" style="color:var(--accent)">huggingface.co</a> in Chrome. Download the <code>.safetensors</code> file. By default downloads land in <span class="path">~/Downloads</span> — move to the correct folder:</p>
+    <pre><code>sudo mv ~/Downloads/model-name.safetensors /data/comfyui/models/checkpoints/</code></pre>
+
+    <h3>Popular model sources</h3>
+    <table>
+      <thead><tr><th>Source</th><th>URL</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>HuggingFace</td><td>huggingface.co</td><td>Official model repos, free download</td></tr>
+        <tr><td>CivitAI</td><td>civitai.com</td><td>Community models, LoRAs, checkpoints</td></tr>
+        <tr><td>Stability AI</td><td>stability.ai</td><td>Official SDXL and Stable Diffusion models</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      ⚠️ Large models can be 2–7 GB each. Make sure the machine has sufficient disk space before downloading. Check free space with: <code>df -h /data</code>
+    </div>
+  </div>
+
+  <!-- 5. Managing the Service -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <h2>Managing the Service</h2>
+    </div>
+
+    <p>ComfyUI runs as a systemd service and starts automatically on boot. Use the terminal for the commands below.</p>
+
+    <table>
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>sudo systemctl status comfyui</td><td>Check if the service is running</td></tr>
+        <tr><td>sudo systemctl restart comfyui</td><td>Restart the service (picks up config changes)</td></tr>
+        <tr><td>sudo systemctl stop comfyui</td><td>Stop the service</td></tr>
+        <tr><td>sudo systemctl start comfyui</td><td>Start the service</td></tr>
+        <tr><td>sudo journalctl -u comfyui -f</td><td>Live logs for the service</td></tr>
+        <tr><td>sudo docker logs comfyui --tail 50</td><td>Last 50 lines of container output</td></tr>
+        <tr><td>sudo docker exec comfyui nvidia-smi</td><td>Check GPU inside the container</td></tr>
+        <tr><td>sudo docker exec comfyui supervisorctl restart comfyui</td><td>Restart only the ComfyUI process, not the whole container</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Outputs -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🖼️</div>
+      <h2>Finding Your Generated Images</h2>
+    </div>
+
+    <p>Every image generated by ComfyUI is automatically saved to:</p>
+    <pre><code>/data/comfyui/outputs/</code></pre>
+
+    <p>Images are organised into subfolders by date. Open the file manager on the desktop and navigate to <span class="path">/data/comfyui/outputs</span> to browse them, or use the terminal:</p>
+
+    <pre><code># List the most recently generated images
+ls -lt /data/comfyui/outputs/ | head -20</code></pre>
+
+    <div class="callout tip">
+      💡 The outputs folder is outside the container — images are safe even if the container is recreated or updated.
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="left">
+    Powered by <a href="https://illuma.cloud" target="_blank">Illuma Cloud</a> — The cloud platform that puts you in control, without lock-in, without waste.
+  </div>
+  <div class="right">IllumaComfyUI User Guide</div>
+</footer>
+
+</body>
+</html>

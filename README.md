@@ -52,6 +52,9 @@ All tunables are environment variables. Pass them with `sudo -E` or prefix the c
 | `DATA_DIR` | `/data/comfyui` | Root path for persistent volumes |
 | `POLL_MAX_ATTEMPTS` | `30` | Max poll attempts in validation (×10s = 300s) |
 | `POLL_SLEEP_SEC` | `10` | Seconds between poll attempts |
+| `WEB_USER` | `illuma` | ComfyUI UI login username (fixed across restarts) |
+| `WEB_PASSWORD` | `illuma` | ComfyUI UI login password (fixed across restarts) |
+| `WEB_TOKEN` | `illumaCloud` | ComfyUI token for direct URL access (fixed across restarts) |
 | `REEMO_AGENT_TOKEN` | *(required for Phase 8)* | Reemo Personal Key or Studio Key — from reemo.io/download |
 | `PARSEC_TEAM_ID` | *(optional)* | Parsec Teams ID — for managed host registration |
 | `PARSEC_TEAM_SECRET` | *(optional)* | Parsec Teams secret (paired with `PARSEC_TEAM_ID`) |
@@ -145,17 +148,19 @@ Sentinel: `/var/lib/illuma/.remote-access-done` — skipped on re-runs once pass
 ---
 
 ### Phase 9 — Add My Packages
-Installs additional host packages. Each package is validated after install.
+Installs additional host packages and places the user guide on the desktop.
 
 | Package | Method |
 |---|---|
 | **Google Chrome** (stable) | Official Google apt repository |
+| **IllumaComfyUI.html** | Copied to `~/Desktop/` of `REMOTE_ACCESS_USER` |
 
 Steps:
 1. Adds Google's signing key via `apt-key add`
 2. Writes `/etc/apt/sources.list.d/google-chrome.list`
 3. Runs `apt-get update` + installs `google-chrome-stable`
 4. Validates: confirms binary is on PATH and `google-chrome-stable --version` returns output
+5. Copies `IllumaComfyUI.html` to `/home/<REMOTE_ACCESS_USER>/Desktop/`
 
 Sentinel: `/var/lib/illuma/.add-packages-done` — skipped on re-runs once passed.
 
@@ -194,6 +199,30 @@ wget -O /data/comfyui/models/checkpoints/v1-5-pruned-emaonly.safetensors \
 
 # If ComfyUI doesn't pick it up immediately, refresh inside the container:
 docker exec comfyui supervisorctl restart comfyui
+```
+
+---
+
+## Accessing ComfyUI
+
+Open in browser (from the VM via Reemo, or from any machine with network access):
+
+```
+http://<host>:8188/?token=illumaCloud
+```
+
+Or use the login screen:
+
+| Field | Value |
+|---|---|
+| Username | `illuma` |
+| Password | `illuma` |
+| Token URL | `http://<host>:8188/?token=illumaCloud` |
+
+These credentials are static — they do not change on container or VM restart.
+To override them, pass environment variables at install time:
+```bash
+WEB_PASSWORD=mypassword WEB_TOKEN=mytoken sudo -E bash install.sh
 ```
 
 ---
@@ -250,7 +279,9 @@ scripts/
                                         _configureNvidiaVirtualDisplay(), _installParsec(),
                                         _installReemo(), _configureFirewall(),
                                         _enableRemoteAccessServices()
-  add-packages.sh           ← Phase 9: addPackages(), _installChrome(), _validateChrome()
+  add-packages.sh           ← Phase 9: addPackages(), _installChrome(), _validateChrome(),
+                                        _placeGuideOnDesktop()
+  IllumaComfyUI.html        ← User guide placed on desktop by Phase 9
 ```
 
 ---
