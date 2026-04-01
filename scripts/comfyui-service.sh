@@ -14,6 +14,11 @@ WEB_USER="${WEB_USER:-illuma}"
 WEB_PASSWORD="${WEB_PASSWORD:-illuma}"
 WEB_TOKEN="${WEB_TOKEN:-illumaCloud}"
 
+# Name of the committed local image that bakes in the PyTorch upgrade.
+# Once committed, this image is used for all future container starts so the
+# upgrade is never lost across restarts or VM reboots.
+COMFYUI_COMMITTED_IMAGE="illuma-comfyui:cu128"
+
 function setupComfyUI() {
     print_message "blue" "Setting up ComfyUI container and systemd service..."
 
@@ -50,6 +55,16 @@ function setupComfyUI() {
 }
 
 function writeSystemdService() {
+    # Use the committed image if it exists (has PyTorch cu128 baked in),
+    # otherwise fall back to the upstream base image.
+    local image_to_use="$COMFYUI_IMAGE"
+    if docker image inspect "$COMFYUI_COMMITTED_IMAGE" &>/dev/null; then
+        image_to_use="$COMFYUI_COMMITTED_IMAGE"
+        print_message "blue" "Using committed image: $COMFYUI_COMMITTED_IMAGE"
+    else
+        print_message "blue" "Committed image not found — using base image: $COMFYUI_IMAGE"
+    fi
+
     print_message "blue" "Writing systemd unit: /etc/systemd/system/${SERVICE_NAME}.service"
 
     # Unit structure mirrors ansible/roles/render-cli/templates/illuma-cli.service.j2:
@@ -83,7 +98,7 @@ ExecStart=/usr/bin/docker run \\
     -e WEB_PASSWORD=${WEB_PASSWORD} \\
     -e WEB_TOKEN=${WEB_TOKEN} \\
     -e WEB_ENABLE_AUTH=true \\
-    ${COMFYUI_IMAGE}
+    ${image_to_use}
 
 ExecStop=/usr/bin/docker stop ${SERVICE_NAME}
 
@@ -155,15 +170,28 @@ else:
 
     print_message "yellow" "PyTorch GPU compatibility: $compat_check — upgrading to cu128..."
     docker exec "${SERVICE_NAME}" "$pip" install --quiet \
-        torch==2.11.0+cu128 torchvision torchaudio \
+        torch==2.7.0+cu128 torchvision torchaudio \
         --index-url https://download.pytorch.org/whl/cu128
 
-    # Restart ComfyUI process inside container to load new torch
-    docker exec "${SERVICE_NAME}" supervisorctl restart comfyui
+    # Commit the container with the upgraded PyTorch baked in so that
+    # every future restart (service restart, VM reboot) uses this image
+    # and never loses the upgrade again.
+    print_message "blue" "Committing container as ${COMFYUI_COMMITTED_IMAGE}..."
+    docker commit \
+        --message "PyTorch 2.7.0+cu128 — ${compat_check} GPU support" \
+        "${SERVICE_NAME}" \
+        "${COMFYUI_COMMITTED_IMAGE}" || \
+        die "Failed to commit container as ${COMFYUI_COMMITTED_IMAGE}"
+    print_message "green" "Container committed as ${COMFYUI_COMMITTED_IMAGE}"
+
+    # Rewrite the systemd service to use the committed image and restart
+    writeSystemdService
+    systemctl daemon-reload
+    systemctl restart "${SERVICE_NAME}.service"
     sleep 15
 
     echo "$current_digest" > "$sentinel"
-    print_message "green" "PyTorch upgraded to cu128 and ComfyUI restarted"
+    print_message "green" "PyTorch upgraded to cu128, committed, and service updated to use ${COMFYUI_COMMITTED_IMAGE}"
 }
 
 export -f setupComfyUI
