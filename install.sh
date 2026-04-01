@@ -64,14 +64,16 @@ function main() {
     echo "  Port:     ${COMFYUI_PORT:-8188}"
     echo "  Data dir: ${DATA_DIR:-/data/comfyui}"
     echo ""
-    echo "  1. System baseline (packages, sysctl, comfyui user)"
-    echo "  2. Docker CE"
-    echo "  3. NVIDIA Container Toolkit"
-    echo "  4. ComfyUI container + systemd service"
-    echo "  5. Validation (container, port, GPU)"
-    echo "  6. Workflow test (download SD1.5 model, run txt2img, verify output)"
-    echo "  7. Remote access client setup (XFCE desktop, Parsec host, Reemo agent, firewall)"
-    echo "  8. Add my packages (Google Chrome)"
+    echo "  1. Pre-flight checks (OS, CPU, RAM, GPU)"
+    echo "  2. System baseline (packages, sysctl, comfyui user)"
+    echo "  3. Docker CE"
+    echo "  4. NVIDIA Container Toolkit"
+    echo "  4b. PyTorch GPU compatibility (cu128 upgrade for Blackwell if needed)"
+    echo "  5. ComfyUI container + systemd service"
+    echo "  6. Validation (container, port, GPU)"
+    echo "  7. Workflow test (download SD1.5 model, run txt2img, verify output)"
+    echo "  8. Remote access client setup (XFCE desktop, Parsec host, Reemo agent, firewall)"
+    echo "  9. Add my packages (Google Chrome, IllumaComfyUI.html desktop guide)"
     echo ""
     echo -n "Continue? [y/N]: "
     read -r response
@@ -82,20 +84,20 @@ function main() {
     trap cleanup_temp_files EXIT
     setup_logging
 
-    # Phase 1: System baseline
-    print_message "blue" "=== Phase 1: System Baseline ==="
+    # Phase 2: System baseline
+    print_message "blue" "=== Phase 2: System Baseline ==="
     setupSystem
 
-    # Phase 2: Docker
-    print_message "blue" "=== Phase 2: Docker CE ==="
+    # Phase 3: Docker
+    print_message "blue" "=== Phase 3: Docker CE ==="
     installDocker
 
-    # Phase 3: NVIDIA Container Toolkit
-    print_message "blue" "=== Phase 3: NVIDIA Container Toolkit ==="
+    # Phase 4: NVIDIA Container Toolkit
+    print_message "blue" "=== Phase 4: NVIDIA Container Toolkit ==="
     installNvidiaToolkit
 
-    # Phase 4: ComfyUI service
-    print_message "blue" "=== Phase 4: ComfyUI Service ==="
+    # Phase 5: ComfyUI service
+    print_message "blue" "=== Phase 5: ComfyUI Service ==="
     setupComfyUI
 
     # Phase 4b: PyTorch GPU compatibility upgrade
@@ -104,8 +106,8 @@ function main() {
     print_message "blue" "=== Phase 4b: PyTorch GPU Compatibility ==="
     upgradeContainerPyTorch
 
-    # Phase 5: Validation
-    print_message "blue" "=== Phase 5: Validation ==="
+    # Phase 6: Validation
+    print_message "blue" "=== Phase 6: Validation ==="
     validateComfyUI
 
     # Phase 7: Workflow test
