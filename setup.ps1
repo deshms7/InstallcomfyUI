@@ -16,14 +16,14 @@ $ErrorActionPreference = "Stop"
 # ============================================================
 # CONFIGURATION
 # ============================================================
-$COMFYUI_DIR     = $env:COMFYUI_DIR     ?? "C:\ComfyUI"
-$COMFYUI_PORT    = $env:COMFYUI_PORT    ?? "8188"
+if ($env:COMFYUI_DIR)       { $COMFYUI_DIR  = $env:COMFYUI_DIR }       else { $COMFYUI_DIR  = "C:\ComfyUI" }
+if ($env:COMFYUI_PORT)      { $COMFYUI_PORT = $env:COMFYUI_PORT }      else { $COMFYUI_PORT = "8188" }
 $COMFYUI_COMMIT  = "040460495c5713b852e4aac29a909aa63b309da7"
 $COMFYUI_REPO    = "https://github.com/comfyanonymous/ComfyUI.git"
 $VENV_DIR        = "$COMFYUI_DIR\.venv"
 $SENTINEL_DIR    = "C:\ProgramData\illuma"
 $SERVICE_NAME    = "comfyui"
-$REEMO_TOKEN     = $env:REEMO_AGENT_TOKEN ?? "studio_fa413ff7044b"
+if ($env:REEMO_AGENT_TOKEN) { $REEMO_TOKEN  = $env:REEMO_AGENT_TOKEN } else { $REEMO_TOKEN  = "studio_fa413ff7044b" }
 
 # ============================================================
 # COMMON UTILITIES
@@ -315,7 +315,7 @@ function Invoke-CustomNodes {
         if (Test-Path "$dest\requirements.txt") {
             & $pip install --quiet -r "$dest\requirements.txt" 2>$null | Out-Null
         }
-        Print-Message "blue" "  $name @ $($hash.Substring(0,7))"
+        $shortHash = $hash.Substring(0,7); Print-Message "blue" "  $name @ $shortHash"
     }
     Print-Message "green" "Git nodes done"
 
@@ -549,7 +549,7 @@ function Main {
     Print-Message "green" "  URL: http://localhost:$COMFYUI_PORT"
     Print-Message "green" "================================================"
     Write-Host ""
-    Print-Message "blue" "Next step: copy models into $COMFYUI_DIR\models\"
+    Print-Message "blue" "Next step: copy models into $COMFYUI_DIR\models\."
 }
 
 Main
